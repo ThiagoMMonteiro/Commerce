@@ -1,3 +1,44 @@
 body {
     padding: 20px;
 }
+
+li p {
+    white-space: nowrap;
+    width: 100%;                   
+    overflow: hidden;     
+    text-overflow: ellipsis;
+}
+.figure-caption {
+    color: rgb(3, 197, 231);
+    font-weight: bold;
+    font-size: 16px;
+}
+.list li {
+    display: inline-block; 
+    width: 250px; 
+    margin: 5px;
+    
+}
+
+.div_listing {
+    /* display: inline-block;  */
+    text-align: center;
+    margin: 5px;
+    /* border: solid; */
+    width: 500px;
+}
+
+.div_listing p{
+    margin: 0 auto;
+    max-width: 420px;
+    /* border: solid 2px #ccc; */
+    padding: 12px;
+    overflow-wrap: break-word;
+}
+
+.hr_list {
+    height: 1px; 
+    border: solid rgb(17, 17, 54); 
+    background-color: rgb(17, 17, 54);
+}
+

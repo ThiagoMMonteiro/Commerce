@@ -77,3 +77,15 @@ def create_listing(request):
         auction_listing.save() 
         return HttpResponseRedirect(reverse("index"))
     return render(request, "auctions/create_listings.html")
+
+def listing(request, listing_id):
+    al = AuctionListings.objects.get(pk=listing_id)
+    return render(request, "auctions/listing.html", {
+        "al": al
+    })
+
+def watchlist(request, user_id):
+    user = User.objects.get(pk=user_id)
+    return render(request, "auctions/watchlist.html", {
+        "watchlist": user.watchlist.all()
+    })

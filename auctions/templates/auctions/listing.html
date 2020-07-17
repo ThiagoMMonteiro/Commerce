@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="div_listing">
+    <figure class="figure">
+        {% if al.url_listing_image %}
+            <img src="{{ al.url_listing_image }}" width="250" class="figure-img img-fluid rounded" alt="Image">
+        {% else %}
+            <img src="../../static/auctions/no-image.png" width="250" class="figure-img img-fluid rounded" alt="Image">
+        {% endif %}
+        <figcaption class="figure-caption text-center">{{ al.listing_title }}</figcaption>
+    </figure>
+
+    <p> {{ al.listing_description }} </p>
+    <p>Price: ${{ al.bid }}</p>
+    <p>Category: {{ al.listing_category }}</p>
+    <p>Created {{ al.post_date }}</p>
+
+    <a class="btn btn-info" href="#" role="button">Add to Watchlist</a>
+</div>
+            
+{% endblock %}

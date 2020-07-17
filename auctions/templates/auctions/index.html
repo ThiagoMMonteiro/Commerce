@@ -2,6 +2,28 @@
 
 {% block body %}
     <h2>Active Listings</h2>
+    <hr>
 
-    TODO
+    <ul>
+    {% for al in auction_listings %}
+        <li>            
+                <figure class="figure">
+                    {% if al.url_listing_image %}
+                        <img src="{{ al.url_listing_image }}" width="180" class="figure-img img-fluid rounded" alt="Image">
+                    {% else %}
+                        <img src="../../static/auctions/no-image.png" width="180" class="figure-img img-fluid rounded" alt="Image">
+                    {% endif %}
+                    <figcaption class="figure-caption text-right">{{ al.listing_title }}</figcaption>
+                </figure>
+
+                <h6>Description: {{ al.listing_description }}</h6>
+                <p>Price: ${{ al.bid }}</p>
+                <p>Category: {{ al.listing_category }}</p>
+                <p>Created {{ al.post_date }}</p>
+
+                <a class="btn btn-info" href="#" role="button">Details / Place a bid</a>
+        </li>
+        <hr>
+    {% endfor %}
+    </ul>
 {% endblock %}

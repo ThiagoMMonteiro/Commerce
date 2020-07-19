@@ -85,9 +85,20 @@ def listing(request, listing_id):
         "watchlist": al.users_whatching.all()
     })
 
-
 def watchlist(request, user_id):
     user = User.objects.get(pk=user_id)
     return render(request, "auctions/watchlist.html", {
         "watchlist": user.watchlist.all()
     })
+
+def watchlist_add(request, al_id, user_id):
+    al = AuctionListings.objects.get(pk=al_id)
+    user = User.objects.get(pk=user_id)
+    user.watchlist.add(al)
+    return HttpResponseRedirect(reverse("listing", args=[al_id]))
+
+def watchlist_remove(request, al_id, user_id):
+    al = AuctionListings.objects.get(pk=al_id)
+    user = User.objects.get(pk=user_id)
+    user.watchlist.remove(al)
+    return HttpResponseRedirect(reverse("listing", args=[al_id]))

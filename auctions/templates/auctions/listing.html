@@ -18,9 +18,9 @@
     
     {% if user.is_authenticated %}
         {% if user in watchlist %}
-            <a class="btn btn-info" href="#" role="button">Remove from Watchlist</a>
+            <a class="btn btn-info" href="{% url 'watchlist_remove' al.id user.id %}" role="button">Remove from Watchlist</a>
         {% else %}
-            <a class="btn btn-info" href="#" role="button">Add to Watchlist</a>
+            <a class="btn btn-info" href="{% url 'watchlist_add' al.id user.id %}" role="button">Add to Watchlist</a>
         {% endif %}
     {% else %}
         <a class="btn btn-info" href="{% url 'login' %}" role="button">Login to place a bid or add to your watchlist.</a>

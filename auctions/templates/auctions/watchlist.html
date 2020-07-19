@@ -22,6 +22,8 @@
                 <a class="btn btn-info" href="{% url 'listing' wl.id %}" role="button">Details / Place a bid</a>                
                 <hr class="hr_list">
             </li>
+        {% empty %}
+            <h2>No objects in watchlist</h2>
         {% endfor %}
     </ul>
 {% endblock %}

@@ -81,8 +81,10 @@ def create_listing(request):
 def listing(request, listing_id):
     al = AuctionListings.objects.get(pk=listing_id)
     return render(request, "auctions/listing.html", {
-        "al": al
+        "al": al,
+        "watchlist": al.users_whatching.all()
     })
+
 
 def watchlist(request, user_id):
     user = User.objects.get(pk=user_id)

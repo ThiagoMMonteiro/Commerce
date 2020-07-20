@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, AuctionListings
+from .models import User, AuctionListings, Bid
 
 
 def index(request):
@@ -102,3 +102,22 @@ def watchlist_remove(request, al_id, user_id):
     user = User.objects.get(pk=user_id)
     user.watchlist.remove(al)
     return HttpResponseRedirect(reverse("listing", args=[al_id]))
+
+def place_bid(request, al_id, user_id):
+    if request.method == "POST":
+        new_bid = float(request.POST["bid"])
+        al = AuctionListings.objects.get(pk=al_id)
+
+        if new_bid <= al.bid:
+            return render(request, "auctions/error.html",{
+                    "message": "Your bid must be greater then current bid!",
+                    "al_id": al_id
+                })
+        else:
+            user = User.objects.get(pk=user_id)
+            bid = Bid(bid=new_bid, bid_owner=user, listing_target=al)
+            bid.save()
+
+            AuctionListings.objects.filter(pk=al_id).update(bid=new_bid)
+
+            return HttpResponseRedirect(reverse("listing", args=[al_id]))

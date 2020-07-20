@@ -8,6 +8,17 @@ li p {
     overflow: hidden;     
     text-overflow: ellipsis;
 }
+
+.form_bid{
+    padding: 12px;
+    width: 250px;
+    margin: 0 auto;
+}
+.bid_div{
+    width: 130px;
+    margin: 0 auto;
+}
+
 .figure-caption {
     color: rgb(3, 197, 231);
     font-weight: bold;

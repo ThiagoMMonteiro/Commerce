@@ -17,3 +17,11 @@ class AuctionListings(models.Model):
 
         def __str__(self):
             return f"{self.listing_title}: {self.listing_description} Current Price: {self.bid} Category: {self.listing_category} Users Watching: {self.users_whatching}"
+
+class Bid(models.Model):
+        bid = models.FloatField()
+        bid_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="my_bid")
+        listing_target = models.ForeignKey(AuctionListings, on_delete=models.CASCADE, related_name="current_bid")
+
+        def __str__(self):
+            return f"{self.listing_target} have a bid of {self.bid} that owner is {self.bid_owner}"

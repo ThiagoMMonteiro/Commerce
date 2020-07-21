@@ -107,10 +107,14 @@ def place_bid(request, al_id, user_id):
     if request.method == "POST":
         new_bid = float(request.POST["bid"])
         al = AuctionListings.objects.get(pk=al_id)
-
-        if new_bid <= al.bid:
+        message = None
+        if new_bid < al.bid and Bid.objects.filter(listing_target=al_id).count() == 0:
+            message = "The bid must be at least as large as the starting bid!"
+        elif new_bid <= al.bid and Bid.objects.filter(listing_target=al_id).count() != 0:
+            message = "The bid must be greater than current bid!"
+        if message:
             return render(request, "auctions/error.html",{
-                    "message": "Your bid must be greater then current bid!",
+                    "message": message,
                     "al_id": al_id
                 })
         else:

@@ -33,6 +33,9 @@
             </div>
             <button type="submit" class="btn btn-info">Submit!</button>
         </form>
+        {% if user == al.al_owner %}
+            <a class="btn btn-info" href="#" role="button">Close Auction</a>
+        {% endif %}
     {% else %}
         <a class="btn btn-info" href="{% url 'login' %}" role="button">Login to place a bid or add to your watchlist.</a>
     {% endif %}

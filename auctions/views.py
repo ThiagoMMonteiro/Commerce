@@ -1,5 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
+from django.db.models import Max
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -9,7 +10,7 @@ from .models import User, AuctionListings, Bid
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "auction_listings": AuctionListings.objects.all()
+        "auction_listings": AuctionListings.objects.filter(is_open=True)
     })
 
 
@@ -73,16 +74,25 @@ def create_listing(request):
         listing_category = request.POST["listing_category"]
 
         auction_listing = AuctionListings(listing_title=listing_title, listing_description=listing_description, bid=starting_bid, 
-                            url_listing_image=url_listing_image, listing_category=listing_category, al_owner=request.user)
+                            url_listing_image=url_listing_image, listing_category=listing_category, al_owner=request.user, is_open = True)
         auction_listing.save() 
         return HttpResponseRedirect(reverse("index"))
     return render(request, "auctions/create_listings.html")
 
 def listing(request, listing_id):
+    
     al = AuctionListings.objects.get(pk=listing_id)
+    try:
+        max_bid = al.current_bid.aggregate(Max('bid'))
+        max_bid = float(max_bid["bid__max"])
+        winner_bid = al.current_bid.all().get(bid=max_bid)
+        winner_user = winner_bid.bid_owner
+    except:
+        winner_user = "al.al_owner"
     return render(request, "auctions/listing.html", {
         "al": al,
-        "watchlist": al.users_whatching.all()
+        "watchlist": al.users_whatching.all(),
+        "winner_user": winner_user
     })
 
 def watchlist(request, user_id):
@@ -125,3 +135,10 @@ def place_bid(request, al_id, user_id):
             AuctionListings.objects.filter(pk=al_id).update(bid=new_bid)
 
             return HttpResponseRedirect(reverse("listing", args=[al_id]))
+
+def close_auction(request, al_id):
+    al = AuctionListings.objects.get(pk=al_id)
+    al.is_open = False
+    al.save()
+
+    return HttpResponseRedirect(reverse("index"))

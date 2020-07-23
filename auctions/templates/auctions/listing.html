@@ -19,22 +19,25 @@
     <p>Price: ${{ al.bid }}</p>
     <p>Category: {{ al.listing_category }}</p>
     <p>Created {{ al.post_date }}</p>
-    
     {% if user.is_authenticated %}
         {% if user in watchlist %}
             <a class="btn btn-info" href="{% url 'watchlist_remove' al.id user.id %}" role="button">Remove from Watchlist</a>
         {% else %}
             <a class="btn btn-info" href="{% url 'watchlist_add' al.id user.id %}" role="button">Add to Watchlist</a>
         {% endif %}
-        <form action="{% url 'place_bid' al.id user.id %}" class="form-inline form_bid" method="POST">
-            {% csrf_token %}
-            <div class="form-group bid_div">
-                <input type="text" class="form-control col-12" id="bid_input" name="bid" placeholder="Place a bid..." required>
-            </div>
-            <button type="submit" class="btn btn-info">Submit!</button>
-        </form>
-        {% if user == al.al_owner %}
-            <a class="btn btn-info" href="#" role="button">Close Auction</a>
+        {% if al.is_open %}
+            <form action="{% url 'place_bid' al.id user.id %}" class="form-inline form_bid" method="POST">
+                {% csrf_token %}
+                <div class="form-group bid_div">
+                    <input type="text" class="form-control col-12" id="bid_input" name="bid" placeholder="Place a bid..." required>
+                </div>
+                <button type="submit" class="btn btn-info">Submit!</button>
+            </form>
+            {% if user == al.al_owner %}
+                <a class="btn btn-info" href="{% url 'close_auction' al.id %}" role="button">Close Auction</a>
+            {% endif %}
+        {% elif user == winner_user %}
+            <h2>You are the Winner!!!</h2>
         {% endif %}
     {% else %}
         <a class="btn btn-info" href="{% url 'login' %}" role="button">Login to place a bid or add to your watchlist.</a>

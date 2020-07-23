@@ -155,7 +155,7 @@ def add_comment(request, al_id):
         return HttpResponseRedirect(reverse("listing", args=[al_id]))
 
 def categories(request):
-    categories = ["Others", "Fashion", "Toys", "Eletronics", "House and Garden", "Sports", "Health and Beauty"]
+    categories = ["Others", "Fashion", "Toys", "Electronics", "House and Garden", "Sports", "Health and beauty"]
     return render(request, "auctions/categories.html", {
         "categories": categories
     })

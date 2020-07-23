@@ -19,6 +19,17 @@
     <p>Price: ${{ al.bid }}</p>
     <p>Category: {{ al.listing_category }}</p>
     <p>Created {{ al.post_date }}</p>
+
+    <div>
+        <ul>
+            {% if comments %}
+                <h5>Comments:</h5>
+            {% endif %}
+            {% for comment in comments %}
+                <li>{{ comment.comment }} posted by: {{ comment.comment_owner }}</li>
+            {% endfor %}
+        </ul>
+    </div>
     {% if user.is_authenticated %}
         {% if user in watchlist %}
             <a class="btn btn-info" href="{% url 'watchlist_remove' al.id user.id %}" role="button">Remove from Watchlist</a>
@@ -39,6 +50,13 @@
         {% elif user == winner_user %}
             <h2>You are the Winner!!!</h2>
         {% endif %}
+        <form action="{% url 'add_comment' al.id %}" class="comment_form" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea class="form-control" id="comment_id" name="comment" rows="3" placeholder="Add a comment..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-info">Submit comment</button>
+        </form>
     {% else %}
         <a class="btn btn-info" href="{% url 'login' %}" role="button">Login to place a bid or add to your watchlist.</a>
     {% endif %}

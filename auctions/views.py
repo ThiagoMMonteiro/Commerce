@@ -5,7 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, AuctionListings, Bid
+from .models import User, AuctionListings, Bid, Comment
 
 
 def index(request):
@@ -88,11 +88,12 @@ def listing(request, listing_id):
         winner_bid = al.current_bid.all().get(bid=max_bid)
         winner_user = winner_bid.bid_owner
     except:
-        winner_user = "al.al_owner"
+        winner_user = al.al_owner
     return render(request, "auctions/listing.html", {
         "al": al,
         "watchlist": al.users_whatching.all(),
-        "winner_user": winner_user
+        "winner_user": winner_user,
+        "comments": al.comments.all()
     })
 
 def watchlist(request, user_id):
@@ -142,3 +143,27 @@ def close_auction(request, al_id):
     al.save()
 
     return HttpResponseRedirect(reverse("index"))
+
+def add_comment(request, al_id):
+    if request.method == "POST":
+        comment = request.POST["comment"]
+        comment_owner = request.user
+        listing_target = AuctionListings.objects.get(pk=al_id)
+
+        new_comment = Comment(comment=comment, comment_owner=comment_owner, listing_target=listing_target)
+        new_comment.save()
+        return HttpResponseRedirect(reverse("listing", args=[al_id]))
+
+def categories(request):
+    categories = ["Others", "Fashion", "Toys", "Eletronics", "House and Garden", "Sports", "Health and Beauty"]
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+def category_listings(request, category):
+    list_al = AuctionListings.objects.all().filter(listing_category=category, is_open=True)
+
+    return render(request, "auctions/category_listings.html", {
+        "list_al": list_al,
+        "category": category
+    })

@@ -27,3 +27,11 @@ class Bid(models.Model):
 
         def __str__(self):
             return f"{self.listing_target} have a bid of {self.bid} that owner is {self.bid_owner}"
+
+class Comment(models.Model):
+    comment = models.TextField()
+    listing_target = models.ForeignKey(AuctionListings, on_delete=models.CASCADE, related_name="comments")
+    comment_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_comments")
+    
+    def __str__(self):
+        return f"{self.comment_owner} add a comment: {self.comment} at {self.listing_target}"
